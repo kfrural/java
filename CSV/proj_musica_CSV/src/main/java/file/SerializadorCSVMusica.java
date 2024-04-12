@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class SerializadorCSVMusica {
     public String toCSV(List<Musica> musica) {
-        String csv = "Cod;Nome;Custo;Preco;\n";
+        String csv = "Titulo;Artista;Duracao;Preco;\n";
         for (Musica m : musica) {
             csv += m.getTitulo() + ";" 
                 + m.getArtista()+ ";"
