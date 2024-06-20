@@ -1,0 +1,15 @@
+/home/kfrural/Downloads/ProjPedidoProdutos-main/src/main/java/com/oo/projpedidoprodutos/file/FilePersistence.java
+/home/kfrural/Downloads/ProjPedidoProdutos-main/src/main/java/com/oo/projpedidoprodutos/file/SerializadorCSVProduto.java
+/home/kfrural/Downloads/ProjPedidoProdutos-main/src/main/java/com/oo/projpedidoprodutos/gui/dialogs/DlgCadProduto.java
+/home/kfrural/Downloads/ProjPedidoProdutos-main/src/main/java/com/oo/projpedidoprodutos/gui/dialogs/DlgEscolhaProduto.java
+/home/kfrural/Downloads/ProjPedidoProdutos-main/src/main/java/com/oo/projpedidoprodutos/gui/dialogs/DlgCadPessoa.java
+/home/kfrural/Downloads/ProjPedidoProdutos-main/src/main/java/com/oo/projpedidoprodutos/classes/Pessoa.java
+/home/kfrural/Downloads/ProjPedidoProdutos-main/src/main/java/com/oo/projpedidoprodutos/gerenciador/GerenciadorProduto.java
+/home/kfrural/Downloads/ProjPedidoProdutos-main/src/main/java/com/oo/projpedidoprodutos/file/SerializadorCSVPessoa.java
+/home/kfrural/Downloads/ProjPedidoProdutos-main/src/main/java/com/oo/projpedidoprodutos/gui/FrHome.java
+/home/kfrural/Downloads/ProjPedidoProdutos-main/src/main/java/com/oo/projpedidoprodutos/gui/dialogs/DlgEscolhaCliente.java
+/home/kfrural/Downloads/ProjPedidoProdutos-main/src/main/java/com/oo/projpedidoprodutos/classes/Produto.java
+/home/kfrural/Downloads/ProjPedidoProdutos-main/src/main/java/com/oo/projpedidoprodutos/ProjPedidoProdutos.java
+/home/kfrural/Downloads/ProjPedidoProdutos-main/src/main/java/com/oo/projpedidoprodutos/gerenciador/GerenciadorPessoa.java
+/home/kfrural/Downloads/ProjPedidoProdutos-main/src/main/java/com/oo/projpedidoprodutos/gui/dialogs/DlgCadPedido.java
+/home/kfrural/Downloads/ProjPedidoProdutos-main/src/main/java/com/oo/projpedidoprodutos/classes/Pedido.java
