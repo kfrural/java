@@ -1,37 +1,52 @@
 package gui.dialogs;
+
 import classes.Aluno;
 import gerenciador.GerenciadorAluno;
 import gui.tableModels.TMCadAluno;
+import interfaces.IRepositorioDados;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import service.RepositorioAluno;
+import service.SQLiteConnector;
+import service.ServicoDadosAluno;
 
 /**
  *
  * @author kfrural
  */
 public class DlgCadAluno extends javax.swing.JDialog {
- private boolean editando;
+
+    private boolean editando;
     private String cpfEscolhido;
     private Aluno pessoaEditando;
     private GerenciadorAluno gerenciadorAlunos;
-    
-     public DlgCadAluno() {
+    public ServicoDadosAluno servicoDadosAluno;
+
+    public DlgCadAluno() throws SQLException {
         this.gerenciadorAlunos = new GerenciadorAluno();
         this.pessoaEditando = new Aluno();
         this.editando = false;
         this.cpfEscolhido = "";
-
+        
+        SQLiteConnector connector = new SQLiteConnector("alunos.db");
+        IRepositorioDados repositorio = new RepositorioAluno(connector);
+        this.servicoDadosAluno = new ServicoDadosAluno(repositorio);
+        
         initComponents();
         this.habilitarCampos(false);
-        this.limparCampos();        
+        this.limparCampos();
         this.atualizarTabela();
         
-
         this.gerenciadorAlunos.carregarDoArquivo("ListagemAlunos.csv");
-        String listagem = this.gerenciadorAlunos.toString();
-        //edtListagem.setText(listagem);
     }
-     
-     public void habilitarCampos(boolean flag) {
+    
+    public DlgCadAluno(java.awt.Frame parent, boolean modal) {
+
+        super(parent, modal);
+        initComponents();
+    }
+
+public void habilitarCampos(boolean flag) {
         edtNome.setEnabled(flag);
         edtCurso.setEnabled(flag);
         edtIdade.setEnabled(flag);
@@ -48,42 +63,23 @@ public class DlgCadAluno extends javax.swing.JDialog {
     public void objetoParaCampos(Aluno p) {
         edtNome.setText(p.getNome());
         edtCPF.setText(p.getCpf());
-        edtCurso.setText(p.getSexo() + "");
-        edtIdade.setText(p.getIdade() + "");
-
+        edtCurso.setText(p.getCurso());
+        edtIdade.setText(String.valueOf(p.getIdade()));
     }
 
     public Aluno camposParaObjeto() {
         Aluno p = new Aluno();
-
-        //copia o conteudo da caixaDeTexto edtNome para o atributo nome
         p.setNome(edtNome.getText());
-
-        //copia o conteudo da caixaDeTexto edtCpf para o atributo cpf
         p.setCpf(edtCPF.getText());
-
-        //copia o conteudo da caixaDeTexto edtSexo para o atributo sexo
         p.setCurso(edtCurso.getText());
-
-        //copia o conteudo da caixaDeTexto edtIdade para o atributo idade
-        String idadeTexto = edtIdade.getText();
-        int a = 0;
-        if (!idadeTexto.isEmpty()) {
-            a = Integer.parseInt(idadeTexto);
+        try {
+            p.setIdade(Integer.parseInt(edtIdade.getText()));
+        } catch (NumberFormatException e) {
+            p.setIdade(0);
         }
-
-        p.setIdade(a);
-
         return p;
     }
 
-    /**
-     * Creates new form DlgAluno
-     */
-    public DlgCadAluno(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -303,46 +299,77 @@ public class DlgCadAluno extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+       try {
         Aluno novaAluno = this.camposParaObjeto();
 
-        if (this.editando == true) {
-            this.gerenciadorAlunos.atualizarAluno(cpfEscolhido, novaAluno);
-        } else { //Estou inserindo
-            this.gerenciadorAlunos.adicionarAluno(novaAluno);
+        // Validações de campos obrigatórios
+        if (novaAluno.getNome().isEmpty() || novaAluno.getCpf().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nome e CPF são obrigatórios.");
+            return;
         }
 
-        //limpando os botoes
+        // Verifica se está em modo de edição
+        if (this.editando) {
+            // Atualiza o aluno existente
+            this.gerenciadorAlunos.atualizarAluno(cpfEscolhido, novaAluno);
+            JOptionPane.showMessageDialog(this, "Aluno atualizado com sucesso!");
+        } else {
+            // Adiciona um novo aluno
+            this.gerenciadorAlunos.adicionarAluno(novaAluno);
+            JOptionPane.showMessageDialog(this, "Aluno adicionado com sucesso!");
+        }
+
+        // Limpa os campos e desabilita-os
         this.limparCampos();
         this.habilitarCampos(false);
         this.editando = false;
 
-        //salvando a lista no arquivo texto
+        // Atualiza a tabela para refletir as mudanças
         this.atualizarTabela();
+        gerenciadorAlunos.salvarNoArquivo("ListagemAlunos.csv");
+        this.servicoDadosAluno.adicionarAluno(novaAluno);
+
+    } catch (Exception e) {
+        // Exibe uma mensagem de erro em caso de exceção
+        JOptionPane.showMessageDialog(this, "Erro ao salvar o aluno: " + e.getMessage());
+        e.printStackTrace();
+    }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        String cpfEscolhido = JOptionPane.showInputDialog("Informe o CPF que deseja excluir:", "");
+          String cpfEscolhido = JOptionPane.showInputDialog("Informe o CPF que deseja excluir:", "");
+
+        if (cpfEscolhido == null || cpfEscolhido.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "CPF não informado.");
+            return;
+        }
 
         Aluno p = this.gerenciadorAlunos.buscarAluno(cpfEscolhido);
 
         if (p == null) {
-            JOptionPane.showMessageDialog(this, "Não existe este cpf.");
+            JOptionPane.showMessageDialog(this, "Não existe este CPF.");
         } else {
             this.gerenciadorAlunos.removerAluno(cpfEscolhido);
+            this.servicoDadosAluno.excluirAluno(cpfEscolhido);
             JOptionPane.showMessageDialog(this, "Exclusão feita com sucesso!");
         }
 
-       this.atualizarTabela();
+        this.atualizarTabela();
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-        this.habilitarCampos(true);
+         this.habilitarCampos(true);
         this.limparCampos();
         this.editando = false;
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-        String cpfEscolhido = JOptionPane.showInputDialog("Informe o CPF que deseja EDITAR:", "");
+         String cpfEscolhido = JOptionPane.showInputDialog("Informe o CPF que deseja EDITAR:", "");
+
+        if (cpfEscolhido == null || cpfEscolhido.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "CPF não informado.");
+            return;
+        }
 
         this.pessoaEditando = this.gerenciadorAlunos.buscarAluno(cpfEscolhido);
 
@@ -367,25 +394,24 @@ public class DlgCadAluno extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_edtCPFActionPerformed
 
- private void grdProfessorMouseClicked(java.awt.event.MouseEvent evt) {                                       
-       Aluno a = this.getObjetoSelecionadoNaGrid();
-       this.objetoParaCampos(a);
+    private void grdAlunoMouseClicked(java.awt.event.MouseEvent evt) {
+        Aluno a = this.getObjetoSelecionadoNaGrid();
+        if (a != null) {
+            this.objetoParaCampos(a);
+        }
     }
 
-    
-    public Aluno getObjetoSelecionadoNaGrid() {
+     public Aluno getObjetoSelecionadoNaGrid() {
         int linhaSelecionada = grdAluno.getSelectedRow();
 
         if (linhaSelecionada >= 0) {
             TMCadAluno tmCadAluno = (TMCadAluno) grdAluno.getModel();
-
-            Aluno a = tmCadAluno.getObjetoAluno(linhaSelecionada);
-            return a;
+            return tmCadAluno.getObjetoAluno(linhaSelecionada);
         }
-        
+
         return null;
     }
-    
+
     public void atualizarTabela() {
         TMCadAluno tmCadAluno = new TMCadAluno(this.gerenciadorAlunos.getPessoas());
         grdAluno.setModel(tmCadAluno);

@@ -25,6 +25,12 @@ public class Pessoa {
         this.sexo = sexo;
         this.idade = idade;
     }
+    public Pessoa(String nome, String cpf, int idade) {
+        this.cpf = cpf;
+        this.nome = nome;
+        this.sexo = ' '; 
+        this.idade = idade;
+    }
     
     public Pessoa(Pessoa outro){
         this.cpf = outro.getCpf();

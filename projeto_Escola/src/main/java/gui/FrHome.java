@@ -3,13 +3,17 @@ package gui;
 import gui.dialogs.DlgCadAluno;
 import gui.dialogs.DlgCadDisciplina;
 import gui.dialogs.DlgCadProfessor;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 public class FrHome extends javax.swing.JFrame {
 
-           
     public FrHome() {
         initComponents();
-               
+
     }
 
     @SuppressWarnings("unchecked")
@@ -147,19 +151,33 @@ public class FrHome extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCadProfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadProfActionPerformed
-        DlgCadProfessor cadProf = new DlgCadProfessor();
-        cadProf.setVisible(true);
+        DlgCadProfessor cadProfessor = null;
+        try {
+            cadProfessor = new DlgCadProfessor();
+        } catch (SQLException ex) {
+            Logger.getLogger(FrHome.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        cadProfessor.setVisible(true);
     }//GEN-LAST:event_btnCadProfActionPerformed
 
     private void btnCadDisciplinaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadDisciplinaActionPerformed
-        DlgCadDisciplina cadProduto = new DlgCadDisciplina();
+        DlgCadDisciplina cadProduto = null;
+        try {
+            cadProduto = new DlgCadDisciplina();
+        } catch (SQLException ex) {
+            Logger.getLogger(FrHome.class.getName()).log(Level.SEVERE, null, ex);
+        }
         cadProduto.setVisible(true);
     }//GEN-LAST:event_btnCadDisciplinaActionPerformed
 
     private void btnCadAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadAlunoActionPerformed
-        DlgCadAluno cadAluno = new DlgCadAluno();
-        cadAluno.setVisible(true);
-        
+       DlgCadAluno cadAluno = null;
+       try{
+           cadAluno = new DlgCadAluno();
+       } catch (SQLException ex) {
+           Logger.getLogger(FrHome.class.getName()).log(Level.SEVERE, null, ex);
+       }
+       cadAluno.setVisible(true);
     }//GEN-LAST:event_btnCadAlunoActionPerformed
 
     private void mnCadProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnCadProdutosActionPerformed
@@ -178,8 +196,7 @@ public class FrHome extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_mnSairActionPerformed
 
-    
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCadAluno;
     private javax.swing.JButton btnCadDisciplina;

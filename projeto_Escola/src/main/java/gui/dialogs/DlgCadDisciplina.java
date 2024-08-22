@@ -2,7 +2,12 @@ package gui.dialogs;
 import classes.Disciplina;
 import gerenciador.GerenciadorDisciplina;
 import gui.tableModels.TMCadDisciplina;
+import interfaces.IRepositorioDados;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import service.RepositorioDisciplina;
+import service.SQLiteConnector;
+import service.ServicoDadosDisciplina;
 
 /**
  *
@@ -14,15 +19,20 @@ public class DlgCadDisciplina extends javax.swing.JDialog {
     public String codAntigo;
     public GerenciadorDisciplina gerenciadorDisciplina;
     private Disciplina disciplinaEditando;
+    public ServicoDadosDisciplina servicoDadosDisciplina;
+    
 
     /**
      * Creates new form DlgCadDisciplina
      */
-     public DlgCadDisciplina() {
+     public DlgCadDisciplina() throws SQLException {
         this.editando = false;
         this.codAntigo = "";
         this.gerenciadorDisciplina = new GerenciadorDisciplina();
         this.disciplinaEditando = new Disciplina();
+        SQLiteConnector connector = new SQLiteConnector("disciplina.db");
+        IRepositorioDados repositorio = new RepositorioDisciplina(connector);
+        this.servicoDadosDisciplina = new ServicoDadosDisciplina(repositorio);
 
         initComponents();
         this.habilitarCampos(false);
@@ -306,23 +316,20 @@ public class DlgCadDisciplina extends javax.swing.JDialog {
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
          Disciplina p = this.camposParaObjeto();
 
-        //Este metodo ja verifica se esta criando um novo ou atualizando
-        //gerenciadorProfessor.salvarProfessor(p);
         if(this.editando){
             gerenciadorDisciplina.atualizarDisciplina(codAntigo, p);
         }else{
             gerenciadorDisciplina.adicionarDisciplina(p);
         }
 
-         //limpando os botoes
         this.limparCampos();
         this.habilitarCampos(false);
         this.editando = false;
 
-        //salvando a lista no arquivo texto
-        this.atualizarTabela();
+        this.atualizarTabela(); 
+        this.gerenciadorDisciplina.salvarNoArquivo("ListagemDisciplinas.csv");
+        this.servicoDadosDisciplina.adicionarDisciplina(p);
         
-        gerenciadorDisciplina.salvarNoArquivo("ListagemDisciplinas.csv");
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -340,6 +347,7 @@ public class DlgCadDisciplina extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Não existe este produto.");
         } else {
             gerenciadorDisciplina.removerDisciplina(codEscolhido);
+             this.servicoDadosDisciplina.excluirDisciplina(codEscolhido);
             JOptionPane.showMessageDialog(this, "Exclusão feita com sucesso!");
         }
         

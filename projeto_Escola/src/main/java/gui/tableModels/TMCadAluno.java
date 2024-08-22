@@ -36,24 +36,25 @@ public class TMCadAluno extends AbstractTableModel{
     }
 
 
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        Aluno a = this.alunos.get(rowIndex);
-        switch (columnIndex) {
-            case COL_CPF:
-                return a.getCpf();
-            case COL_NOME:
-                return a.getNome();
-            case COL_CURSO:
-                return a.getCurso();
-            case COL_IDADE:
-                return a.getIdade();
-            default:
-                break;
-        }
+@Override
+public Object getValueAt(int rowIndex, int columnIndex) {
+    if (rowIndex < 0 || rowIndex >= alunos.size() || columnIndex < 0 || columnIndex >= getColumnCount()) {
         return "-";
-        
     }
+    Aluno a = this.alunos.get(rowIndex);
+    switch (columnIndex) {
+        case COL_CPF:
+            return a.getCpf();
+        case COL_NOME:
+            return a.getNome();
+        case COL_CURSO:
+            return a.getCurso();
+        case COL_IDADE:
+            return a.getIdade();
+        default:
+            return "-";
+    }
+}
     
     @Override
     public String getColumnName(int columnIndex) {

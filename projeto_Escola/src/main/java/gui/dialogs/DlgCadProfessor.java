@@ -1,25 +1,36 @@
 package gui.dialogs;
+
 import classes.Professor;
 import gerenciador.GerenciadorProfessor;
 import gui.tableModels.TMCadProfessor;
+import interfaces.IRepositorioDados;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import service.RepositorioProfessor;
+import service.SQLiteConnector;
+import service.ServicoDadosProfessor;
 
 /**
  *
  * @author kfrural
  */
 public class DlgCadProfessor extends javax.swing.JDialog {
-    
-     private boolean editando;
+
+    private boolean editando;
     private String cpfEscolhido;
     private Professor pessoaEditando;
     private GerenciadorProfessor gerenciadorProfessors;
-    
-     public DlgCadProfessor() {
+    public ServicoDadosProfessor servicoDadosProf;
+
+    public DlgCadProfessor() throws SQLException {
         this.gerenciadorProfessors = new GerenciadorProfessor();
         this.pessoaEditando = new Professor();
         this.editando = false;
         this.cpfEscolhido = "";
+        
+        SQLiteConnector connector = new SQLiteConnector("professores.db");
+        IRepositorioDados repositorio = new RepositorioProfessor(connector);
+        this.servicoDadosProf = new ServicoDadosProfessor(repositorio);
 
         initComponents();
         this.habilitarCampos(false);
@@ -27,11 +38,16 @@ public class DlgCadProfessor extends javax.swing.JDialog {
         this.atualizarTabela();
 
         this.gerenciadorProfessors.carregarDoArquivo("ListagemProfessors.csv");
-        String listagem = this.gerenciadorProfessors.toString();
-        //edtListagem.setText(listagem);
+
     }
-     
-     public void habilitarCampos(boolean flag) {
+    
+      public DlgCadProfessor(java.awt.Frame parent, boolean modal) {
+
+        super(parent, modal);
+        initComponents();
+    }
+
+    public void habilitarCampos(boolean flag) {
         edtNome.setEnabled(flag);
         edtMateria.setEnabled(flag);
         edtIdade.setEnabled(flag);
@@ -56,16 +72,10 @@ public class DlgCadProfessor extends javax.swing.JDialog {
     public Professor camposParaObjeto() {
         Professor p = new Professor();
 
-        //copia o conteudo da caixaDeTexto edtNome para o atributo nome
         p.setNome(edtNome.getText());
-
-        //copia o conteudo da caixaDeTexto edtCpf para o atributo cpf
         p.setCpf(edtCPF.getText());
-
-        //copia o conteudo da caixaDeTexto edtSexo para o atributo sexo
-         p.setMateria(edtMateria.getText());
-
-        //copia o conteudo da caixaDeTexto edtIdade para o atributo idade
+        p.setMateria(edtMateria.getText());
+        
         String idadeTexto = edtIdade.getText();
         int a = 0;
         if (!idadeTexto.isEmpty()) {
@@ -75,14 +85,6 @@ public class DlgCadProfessor extends javax.swing.JDialog {
         p.setIdade(a);
 
         return p;
-    }
-
-    /**
-     * Creates new form DlgProfessor
-     */
-    public DlgCadProfessor(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
     }
 
     /**
@@ -321,53 +323,54 @@ public class DlgCadProfessor extends javax.swing.JDialog {
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-         String cpfEscolhido = JOptionPane.showInputDialog("Informe o CPF do professor que deseja excluir:", "");
+        String cpfEscolhido = JOptionPane.showInputDialog("Informe o CPF do professor que deseja excluir:", "");
 
-         Professor p = this.gerenciadorProfessors.buscarProfessor(cpfEscolhido);
+        Professor p = this.gerenciadorProfessors.buscarProfessor(cpfEscolhido);
 
         if (p == null) {
             JOptionPane.showMessageDialog(this, "Não existe professor com este cpf.");
         } else {
             this.gerenciadorProfessors.removerProfessor(cpfEscolhido);
+            this.servicoDadosProf.excluirProfessor(cpfEscolhido);
             JOptionPane.showMessageDialog(this, "Exclusão feita com sucesso!");
         }
-        
+
         this.atualizarTabela();
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-       Professor novaProfessor = this.camposParaObjeto();
-         
-        if(this.editando){
-           this.gerenciadorProfessors.atualizarProfessor(cpfEscolhido, novaProfessor);
-        }else{ 
-          this.gerenciadorProfessors.adicionarProfessor(novaProfessor);
+        Professor novaProfessor = this.camposParaObjeto();
+
+        if (this.editando) {
+            this.gerenciadorProfessors.atualizarProfessor(cpfEscolhido, novaProfessor);
+        } else {
+            this.gerenciadorProfessors.adicionarProfessor(novaProfessor);
         }
-        
-        //limpando os botoes
+
         this.limparCampos();
         this.habilitarCampos(false);
         this.editando = false;
 
-        //salvando a lista no arquivo texto
         this.atualizarTabela();
+        gerenciadorProfessors.salvarNoArquivo("ListagemProfessores.csv");
+        this.servicoDadosProf.adicionarProfessor(novaProfessor);
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         String cpfEscolhido = JOptionPane.showInputDialog("Informe o CPF do professor que deseja EDITAR:", "");
-        
-         this.pessoaEditando = this.gerenciadorProfessors.buscarProfessor(cpfEscolhido);
-        
-        if(pessoaEditando == null){
+
+        this.pessoaEditando = this.gerenciadorProfessors.buscarProfessor(cpfEscolhido);
+
+        if (pessoaEditando == null) {
             JOptionPane.showMessageDialog(this, "Não existe professor com este CPF.");
-        }else{
+        } else {
             this.limparCampos();
             this.habilitarCampos(true);
-            
+
             this.objetoParaCampos(pessoaEditando);
             this.editando = true;
             this.cpfEscolhido = pessoaEditando.getCpf();
-        }        
+        }
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -375,13 +378,12 @@ public class DlgCadProfessor extends javax.swing.JDialog {
         this.habilitarCampos(false);
         this.editando = false;
     }//GEN-LAST:event_btnCancelarActionPerformed
-  
-    private void grdProfessorMouseClicked(java.awt.event.MouseEvent evt) {                                       
-       Professor p = this.getObjetoSelecionadoNaGrid();
-       this.objetoParaCampos(p);
+
+    private void grdProfessorMouseClicked(java.awt.event.MouseEvent evt) {
+        Professor p = this.getObjetoSelecionadoNaGrid();
+        this.objetoParaCampos(p);
     }
 
-    
     public Professor getObjetoSelecionadoNaGrid() {
         int linhaSelecionada = grdProfessor.getSelectedRow();
 
@@ -391,15 +393,15 @@ public class DlgCadProfessor extends javax.swing.JDialog {
             Professor professor = tmCadAluno.getObjetoAluno(linhaSelecionada);
             return professor;
         }
-        
+
         return null;
     }
-    
+
     public void atualizarTabela() {
         TMCadProfessor tmCadAluno = new TMCadProfessor(this.gerenciadorProfessors.getPessoas());
         grdProfessor.setModel(tmCadAluno);
     }
-    
+
     /**
      * @param args the command line arguments
      */
