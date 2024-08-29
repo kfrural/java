@@ -70,7 +70,7 @@ public class ProfessorController {
 
         FilePersistence filePersistence = new FilePersistence();
         filePersistence.saveToFile(csvData, caminhoDoArquivo);
-        System.out.println("Produtos salvos com sucesso em " + caminhoDoArquivo);
+        System.out.println("Professor salvo com sucesso em " + caminhoDoArquivo);
     }
 
     public void carregarDoArquivo(String caminhoDoArquivo) {
@@ -80,7 +80,7 @@ public class ProfessorController {
         SerializadorCSVProfessor serializador = new SerializadorCSVProfessor();
         this.pessoas = serializador.fromCSV(csvData);
 
-        System.out.println("Produtos carregados com sucesso de " + caminhoDoArquivo);
+        System.out.println("Professores carregados com sucesso de " + caminhoDoArquivo);
     }
 
     public List<Professor> getPessoas() {

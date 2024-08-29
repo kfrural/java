@@ -28,7 +28,7 @@ public class DlgCadAluno extends javax.swing.JDialog {
         this.editando = false;
         this.cpfEscolhido = "";
         
-        SQLiteConnector connector = new SQLiteConnector("alunos.db");
+        SQLiteConnector connector = new SQLiteConnector("escola.db");
         IDAO repositorio = new AlunoDAO(connector);
         this.servicoDadosAluno = new ServicoDadosAluno(repositorio);
         

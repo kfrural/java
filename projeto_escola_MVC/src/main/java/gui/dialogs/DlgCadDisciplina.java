@@ -22,16 +22,13 @@ public class DlgCadDisciplina extends javax.swing.JDialog {
     private Disciplina disciplinaEditando;
     public ServicoDadosDisciplina servicoDadosDisciplina;
     
-
-    /**
-     * Creates new form DlgCadDisciplina
-     */
      public DlgCadDisciplina() throws SQLException {
         this.editando = false;
         this.codAntigo = "";
         this.gerenciadorDisciplina = new DisciplinaController();
         this.disciplinaEditando = new Disciplina();
-        SQLiteConnector connector = new SQLiteConnector("disciplina.db");
+        
+        SQLiteConnector connector = new SQLiteConnector("escola.db");
         IDAO repositorio = new DisciplinaDAO(connector);
         this.servicoDadosDisciplina = new ServicoDadosDisciplina(repositorio);
 
@@ -318,9 +315,9 @@ public class DlgCadDisciplina extends javax.swing.JDialog {
          Disciplina p = this.camposParaObjeto();
 
         if(this.editando){
-            gerenciadorDisciplina.atualizarDisciplina(codAntigo, p);
+            this.gerenciadorDisciplina.atualizarDisciplina(codAntigo, p);
         }else{
-            gerenciadorDisciplina.adicionarDisciplina(p);
+            this.gerenciadorDisciplina.adicionarDisciplina(p);
         }
 
         this.limparCampos();
@@ -347,7 +344,7 @@ public class DlgCadDisciplina extends javax.swing.JDialog {
         if (p == null) {
             JOptionPane.showMessageDialog(this, "Não existe este produto.");
         } else {
-            gerenciadorDisciplina.removerDisciplina(codEscolhido);
+            this.gerenciadorDisciplina.removerDisciplina(codEscolhido);
              this.servicoDadosDisciplina.excluirDisciplina(codEscolhido);
             JOptionPane.showMessageDialog(this, "Exclusão feita com sucesso!");
         }

@@ -25,8 +25,7 @@ public class ServicoDadosDisciplina {
         repositorio.salvar(disciplina);
     }
 public void adicionarDisciplina(Disciplina d) {
-        Disciplina disciplina = new Disciplina();
-        repositorio.salvar(disciplina);
+        repositorio.salvar(d);
     }
     public void excluirDisciplina(int idDisciplina) {
         repositorio.excluir(idDisciplina);

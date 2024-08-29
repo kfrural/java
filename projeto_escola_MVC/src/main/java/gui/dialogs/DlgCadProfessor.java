@@ -28,7 +28,7 @@ public class DlgCadProfessor extends javax.swing.JDialog {
         this.editando = false;
         this.cpfEscolhido = "";
         
-        SQLiteConnector connector = new SQLiteConnector("professores.db");
+        SQLiteConnector connector = new SQLiteConnector("escola.db");
         IDAO repositorio = new ProfessorDAO(connector);
         this.servicoDadosProf = new ServicoDadosProfessor(repositorio);
 

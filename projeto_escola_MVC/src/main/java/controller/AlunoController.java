@@ -16,10 +16,10 @@ public class AlunoController {
     private List<Aluno> pessoas;
 //    private RepositorioAluno repositorioAluno;
 
-    public AlunoController(AlunoDAO repositorioAluno) {
-        this.pessoas = new ArrayList<>();
-//        this.repositorioAluno = repositorioAluno;
-    }
+//    public AlunoController(AlunoDAO repositorioAluno) {
+//        this.pessoas = new ArrayList<>();
+////        this.repositorioAluno = repositorioAluno;
+//    }
 
     public AlunoController() {
      this.pessoas = new ArrayList<>();

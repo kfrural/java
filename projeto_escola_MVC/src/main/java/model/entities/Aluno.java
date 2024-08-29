@@ -26,7 +26,7 @@ public class Aluno extends Pessoa{
     this.curso = "";
 }
     public Aluno(String nome, String cpf, String curso, int idade) {
-        super(cpf, nome, '\0', idade);
+        super(cpf, nome, idade);
         this.curso = curso;
         this.matricula = 0;
         this.anoingresso = 0; 

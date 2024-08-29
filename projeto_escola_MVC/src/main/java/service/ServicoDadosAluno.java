@@ -66,7 +66,6 @@ public class ServicoDadosAluno {
     }
 
     public void adicionarAluno(Aluno novaAluno) {
-        Aluno aluno = new Aluno();
-        repositorio.salvar(aluno);
+        repositorio.salvar(novaAluno);
     }
 }
