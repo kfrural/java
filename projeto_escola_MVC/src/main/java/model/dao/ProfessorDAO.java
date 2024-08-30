@@ -55,7 +55,6 @@ public class ProfessorDAO implements IDAO<Professor> {
                 professores.add(new Professor(
                     rs.getString("cpf"),
                     rs.getString("nome"),
-                    rs.getString("sexo").charAt(0),
                     rs.getInt("idade"),
                     rs.getString("materia")
                 ));

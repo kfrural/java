@@ -19,10 +19,11 @@ public class AlunoDAO implements IDAO<Aluno> {
     public AlunoDAO(SQLiteConnector connector) {
         this.connector = connector;
     }
-//
-//    public RepositorioAluno() {
-//       
-//    }
+
+    public AlunoDAO() throws SQLException {
+        this.connector = new SQLiteConnector();
+    }
+
 
      @Override
     public void salvar(Aluno aluno) {
@@ -59,7 +60,6 @@ public class AlunoDAO implements IDAO<Aluno> {
                 alunos.add(new Aluno(
                     rs.getString("cpf"),
                     rs.getString("nome"),
-                    rs.getString("sexo").charAt(0),
                     rs.getInt("idade"),
                     rs.getString("curso")
                 ));

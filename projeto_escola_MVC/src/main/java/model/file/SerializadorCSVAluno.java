@@ -12,11 +12,10 @@ public class SerializadorCSVAluno {
 
     // Serializa a lista de pessoas para uma String no formato CSV
     public String toCSV(List<Aluno> pessoas) {
-        String csv = "CPF;Nome;Sexo;Idade;Curso\n"; // Cabeçalho
+        String csv = "CPF;Nome;Idade;Curso\n"; // Cabeçalho
         for (Aluno pessoa : pessoas) {
             csv += pessoa.getCpf() + ";"
                     + pessoa.getNome() + ";"
-                    + pessoa.getSexo() + ";"
                     + pessoa.getIdade() + ";"
                     + pessoa.getCurso() + ";\n";
         }
@@ -31,14 +30,13 @@ public class SerializadorCSVAluno {
         // Ignora o cabeçalho
         for (int i = 1; i < linhas.length; i++) {
             String[] partes = linhas[i].split(";");
-            if (partes.length >= 5) {
+            if (partes.length >= 4) {
                 // Cria uma nova pessoa com os dados da linha
                 Aluno pessoa = new Aluno(
                         partes[0], // CPF
                         partes[1], // Nome
-                        partes[2].charAt(0), // Sexo
-                        Integer.parseInt(partes[3]) ,// Idade
-                        partes[4]
+                        Integer.parseInt(partes[2]) ,// Idade
+                        partes[3]
                 );
 
                 // Adiciona a pessoa à lista

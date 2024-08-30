@@ -19,11 +19,11 @@ public class DlgCadAluno extends javax.swing.JDialog {
     private boolean editando;
     private String cpfEscolhido;
     private Aluno pessoaEditando;
-    private AlunoController gerenciadorAlunos;
+    private AlunoController alunoController;
     public ServicoDadosAluno servicoDadosAluno;
 
     public DlgCadAluno() throws SQLException {
-        this.gerenciadorAlunos = new AlunoController();
+        this.alunoController = new AlunoController();
         this.pessoaEditando = new Aluno();
         this.editando = false;
         this.cpfEscolhido = "";
@@ -37,7 +37,8 @@ public class DlgCadAluno extends javax.swing.JDialog {
         this.limparCampos();
         this.atualizarTabela();
         
-        this.gerenciadorAlunos.carregarDoArquivo("ListagemAlunos.csv");
+        //this.alunoController.carregarDoArquivo("ListagemAlunos.csv");
+        this.servicoDadosAluno.obterAlunos();
     }
     
     public DlgCadAluno(java.awt.Frame parent, boolean modal) {
@@ -311,11 +312,11 @@ public void habilitarCampos(boolean flag) {
         // Verifica se está em modo de edição
         if (this.editando) {
             // Atualiza o aluno existente
-            this.gerenciadorAlunos.atualizarAluno(cpfEscolhido, novaAluno);
+            this.alunoController.atualizarAluno(cpfEscolhido, novaAluno);
             JOptionPane.showMessageDialog(this, "Aluno atualizado com sucesso!");
         } else {
             // Adiciona um novo aluno
-            this.gerenciadorAlunos.adicionarAluno(novaAluno);
+            this.alunoController.adicionarAluno(novaAluno);
             JOptionPane.showMessageDialog(this, "Aluno adicionado com sucesso!");
         }
 
@@ -326,7 +327,7 @@ public void habilitarCampos(boolean flag) {
 
         // Atualiza a tabela para refletir as mudanças
         this.atualizarTabela();
-        gerenciadorAlunos.salvarNoArquivo("ListagemAlunos.csv");
+        alunoController.salvarNoArquivo("ListagemAlunos.csv");
         this.servicoDadosAluno.adicionarAluno(novaAluno);
 
     } catch (Exception e) {
@@ -344,12 +345,12 @@ public void habilitarCampos(boolean flag) {
             return;
         }
 
-        Aluno p = this.gerenciadorAlunos.buscarAluno(cpfEscolhido);
+        Aluno p = this.alunoController.buscarAluno(cpfEscolhido);
 
         if (p == null) {
             JOptionPane.showMessageDialog(this, "Não existe este CPF.");
         } else {
-            this.gerenciadorAlunos.removerAluno(cpfEscolhido);
+            this.alunoController.removerAluno(cpfEscolhido);
             this.servicoDadosAluno.excluirAluno(cpfEscolhido);
             JOptionPane.showMessageDialog(this, "Exclusão feita com sucesso!");
         }
@@ -371,7 +372,7 @@ public void habilitarCampos(boolean flag) {
             return;
         }
 
-        this.pessoaEditando = this.gerenciadorAlunos.buscarAluno(cpfEscolhido);
+        this.pessoaEditando = this.alunoController.buscarAluno(cpfEscolhido);
 
         if (pessoaEditando == null) {
             JOptionPane.showMessageDialog(this, "Não existe este CPF.");
@@ -413,7 +414,7 @@ public void habilitarCampos(boolean flag) {
     }
 
     public void atualizarTabela() {
-        TMCadAluno tmCadAluno = new TMCadAluno(this.gerenciadorAlunos.getPessoas());
+        TMCadAluno tmCadAluno = new TMCadAluno(this.alunoController.listarAlunos());
         grdAluno.setModel(tmCadAluno);
     }
 //

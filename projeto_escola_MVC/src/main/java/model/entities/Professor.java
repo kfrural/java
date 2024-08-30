@@ -14,13 +14,13 @@ public class Professor extends Pessoa {
         this.materia = "";
     }
 
-    public Professor(String cpf, String nome, char sexo, int idade, String materia) {
-        super(cpf, nome, sexo, idade);
+    public Professor(String cpf, String nome, int idade, String materia) {
+        super(cpf, nome,idade);
         this.materia = materia;
     }
-     public Professor(String nome, String cpf, String materia, int idade) {
-        super(cpf, nome, ' ', idade);
-        this.materia = materia;
+
+    public Professor(String nome, String cpf, String materia, int idade) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public void preencher() {

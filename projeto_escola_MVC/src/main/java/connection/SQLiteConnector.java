@@ -13,11 +13,15 @@ public class SQLiteConnector {
         this.connection = DriverManager.getConnection(url);
         
         // Criando as tabelas necessárias
-        criarTabelaPessoa();
+        //criarTabelaPessoa();
         criarTabelaAluno();
         criarTabelaDisciplina();
         criarTabelaProfessor();
     }
+
+   public SQLiteConnector() throws SQLException {
+    this("default.db");
+}
 
     public Connection getConnection() {
         return connection;

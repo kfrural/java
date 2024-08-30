@@ -1,8 +1,10 @@
 package controller;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.dao.AlunoDAO;
+import model.dao.IDAO;
 import model.entities.Aluno;
 import model.file.FilePersistence;
 import model.file.SerializadorCSVAluno;
@@ -14,15 +16,20 @@ import model.file.SerializadorCSVAluno;
 public class AlunoController {
 
     private List<Aluno> pessoas;
+    private IDAO repositorio;
 //    private RepositorioAluno repositorioAluno;
 
 //    public AlunoController(AlunoDAO repositorioAluno) {
 //        this.pessoas = new ArrayList<>();
 ////        this.repositorioAluno = repositorioAluno;
 //    }
+    public AlunoController(IDAO repositorio) {
+        this.repositorio = repositorio;
+    }
 
-    public AlunoController() {
-     this.pessoas = new ArrayList<>();
+    public AlunoController() throws SQLException {
+        this.pessoas = new ArrayList<>();
+        this.repositorio = new AlunoDAO();
     }
 
     public void adicionarAluno(Aluno aluno) {
@@ -31,6 +38,12 @@ public class AlunoController {
         System.out.println("Aluno adicionado com sucesso!");
     }
 
+//     public void adicionarAluno(String nome, String cpf, int idade,String  curso) {  ESSE É O BÃO
+//         ValidAluno valid = new ValidAluno();
+//         Aluno a = valid.valid(nome, cpf, idade, curso);
+//         this.repositorio.salvar(a);
+//        System.out.println("Aluno adicionado com sucesso!");
+//    }
     public boolean removerAluno(String cpf) {
         for (Aluno pessoa : pessoas) {
             if (pessoa.getCpf().equals(cpf)) {
@@ -43,6 +56,10 @@ public class AlunoController {
         return false;
     }
 
+//    public void removerAlunos(String cpf) {  ESSE É O BAO
+//        this.repositorio.excluir(cpf);
+//        System.out.println("Aluno removida com sucesso!");
+//    }
     public Aluno buscarAluno(String cpf) {
         for (Aluno pessoa : pessoas) {
             if (pessoa.getCpf().equals(cpf)) {
@@ -52,19 +69,27 @@ public class AlunoController {
         return null;
     }
 
+//    public Aluno buscarAluno(String cpf) { ESSE É O BAO
+//        return this.repositorio.buscar(cpf);
+//    }
     public void atualizarAluno(String cpf, Aluno alunoNovo) {
         Aluno alunoExistente = buscarAluno(cpf);
-    
-    if (alunoExistente != null) {
-        int indice = pessoas.indexOf(alunoExistente);
-        pessoas.set(indice, alunoNovo);
+
+        if (alunoExistente != null) {
+            int indice = pessoas.indexOf(alunoExistente);
+            pessoas.set(indice, alunoNovo);
 //        repositorioAluno.excluir(alunoExistente.getMatricula()); // Remove o registro antigo
 //        repositorioAluno.salvar(alunoNovo); // Salva o novo registro
-        System.out.println("Aluno atualizado com sucesso.");
-    } else {
-        System.out.println("Aluno com o CPF " + cpf + " não encontrado.");
+            System.out.println("Aluno atualizado com sucesso.");
+        } else {
+            System.out.println("Aluno com o CPF " + cpf + " não encontrado.");
+        }
     }
-    }
+    
+//    public void atualizarAluno(String cpfAntigo, String nome, String idade, String matricula, String anoIngresso) { ESSE É O BAO
+//        removerAluno(cpfAntigo);
+//        adicionarAluno(cpfAntigo, nome, idade, matricula, anoIngresso);
+//    }
 
     @Override
     public String toString() {
@@ -107,8 +132,7 @@ public class AlunoController {
 //
 //        System.out.println("Alunos importados e salvos no banco de dados com sucesso.");
 //    }
-
-    public List<Aluno> getPessoas() {
-        return pessoas;
+    public List<Aluno> listarAlunos() {
+        return repositorio.listar();
     }
 }
