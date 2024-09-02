@@ -10,17 +10,17 @@ public class Disciplina {
     
     private String cod;
     private String nome;
-    private String ch;
+    private int ch;
     private String dpto;
 
     public Disciplina() {
         this.cod = "";
         this.nome = "";
-        this.ch = "";
+        this.ch = 0;
         this.dpto = "";
     }
 
-    public Disciplina(String cod, String nome, String ch, String dpto) {
+    public Disciplina(String cod, String nome, int ch, String dpto) {
         this.cod = cod;
         this.nome = nome;
         this.ch = ch;
@@ -100,11 +100,11 @@ public class Disciplina {
         this.nome = nome;
     }
 
-    public String getCh() {
+    public int getCh() {
         return ch;
     }
 
-    public void setCh(String ch) {
+    public void setCh(int ch) {
         this.ch = ch;
     }
 

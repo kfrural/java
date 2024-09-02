@@ -1,6 +1,6 @@
 package com.mycompany.proj_escola_mvc;
 
-import gui.FrHome;
+import view.FrHome;
 
 /**
  *

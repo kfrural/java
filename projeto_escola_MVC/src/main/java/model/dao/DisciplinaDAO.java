@@ -26,7 +26,7 @@ public class DisciplinaDAO implements IDAO<Disciplina> {
         try (PreparedStatement stmt = connector.getConnection().prepareStatement(sql)) {
             stmt.setString(1, disciplina.getNome());
             stmt.setString(2, disciplina.getCod());
-            stmt.setString(3, disciplina.getCh());
+            stmt.setInt(3, disciplina.getCh());
             stmt.setString(4, disciplina.getDpto());
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -55,7 +55,7 @@ public class DisciplinaDAO implements IDAO<Disciplina> {
                 disciplinas.add(new Disciplina(
                     rs.getString("nome"),
                     rs.getString("codigo"),
-                    rs.getString("ch"),
+                    rs.getInt("ch"),
                     rs.getString("dpto")
                 ));
             }

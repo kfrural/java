@@ -33,7 +33,7 @@ public class SerializadorCSVDisciplina {
                 Disciplina disciplina = new Disciplina();
                 disciplina.setCod(partes[0]);
                 disciplina.setNome(partes[1]);
-                disciplina.setCh(partes[2]);
+                disciplina.setCh(Integer.parseInt(partes[2]));
                 disciplina.setDpto(partes[3]);
                 
                 //apos montar um disciplina, adiciono na lista
