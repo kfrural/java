@@ -302,6 +302,11 @@ public void habilitarCampos(boolean flag) {
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
        try {
         Aluno novaAluno = this.camposParaObjeto();
+        
+        String nome = edtNome.getText();
+        String cpf = cpfEscolhido;
+        int idade = Integer.parseInt(edtIdade.getText());
+        String matricula = edtCurso.getText();
 
         // Validações de campos obrigatórios
         if (novaAluno.getNome().isEmpty() || novaAluno.getCpf().isEmpty()) {
@@ -313,6 +318,7 @@ public void habilitarCampos(boolean flag) {
         if (this.editando) {
             // Atualiza o aluno existente
             this.alunoController.atualizarAluno(cpfEscolhido, novaAluno);
+            this.servicoDadosAluno.atualizarAluno(cpf, nome, idade, matricula);
             JOptionPane.showMessageDialog(this, "Aluno atualizado com sucesso!");
         } else {
             // Adiciona um novo aluno
@@ -327,7 +333,7 @@ public void habilitarCampos(boolean flag) {
 
         // Atualiza a tabela para refletir as mudanças
         this.atualizarTabela();
-        alunoController.salvarNoArquivo("ListagemAlunos.csv");
+        this.alunoController.salvarNoArquivo("ListagemAlunos.csv");
         this.servicoDadosAluno.adicionarAluno(novaAluno);
 
     } catch (Exception e) {
@@ -414,7 +420,7 @@ public void habilitarCampos(boolean flag) {
     }
 
     public void atualizarTabela() {
-        TMCadAluno tmCadAluno = new TMCadAluno(this.alunoController.listarAlunos());
+        TMCadAluno tmCadAluno = new TMCadAluno(this.servicoDadosAluno.obterAlunos());
         grdAluno.setModel(tmCadAluno);
     }
 //

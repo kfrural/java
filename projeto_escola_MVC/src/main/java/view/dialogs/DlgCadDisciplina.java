@@ -15,19 +15,19 @@ import model.entities.Disciplina;
  * @author kfrural
  */
 public class DlgCadDisciplina extends javax.swing.JDialog {
-    
+
     public boolean editando;
     public String codAntigo;
     public DisciplinaController gerenciadorDisciplina;
     private Disciplina disciplinaEditando;
     public ServicoDadosDisciplina servicoDadosDisciplina;
-    
-     public DlgCadDisciplina() throws SQLException {
+
+    public DlgCadDisciplina() throws SQLException {
         this.editando = false;
         this.codAntigo = "";
         this.gerenciadorDisciplina = new DisciplinaController();
         this.disciplinaEditando = new Disciplina();
-        
+
         SQLiteConnector connector = new SQLiteConnector("escola.db");
         IDAO repositorio = new DisciplinaDAO(connector);
         this.servicoDadosDisciplina = new ServicoDadosDisciplina(repositorio);
@@ -36,19 +36,18 @@ public class DlgCadDisciplina extends javax.swing.JDialog {
         this.habilitarCampos(false);
         this.limparCampos();
         this.atualizarTabela();
-        
+
         gerenciadorDisciplina.carregarDoArquivo("ListagemDisciplinas.csv");
         //edtListagem.setText(gerenciadorDisciplina.toString());
     }
 
-    
     public DlgCadDisciplina(java.awt.Frame parent, boolean modal) {
 
         super(parent, modal);
         initComponents();
     }
-    
-     public void habilitarCampos(boolean flag) {
+
+    public void habilitarCampos(boolean flag) {
         edtCod.setEnabled(flag);
         edtNome.setEnabled(flag);
         edtCh.setEnabled(flag);
@@ -65,7 +64,7 @@ public class DlgCadDisciplina extends javax.swing.JDialog {
     public void objetoParaCampos(Disciplina p) {
         edtCod.setText(p.getCod());
         edtNome.setText(p.getNome());
-        edtCh.setText(p.getCh()+"");
+        edtCh.setText(p.getCh() + "");
         edtDpto.setText(p.getDpto() + "");
     }
 
@@ -321,26 +320,33 @@ public class DlgCadDisciplina extends javax.swing.JDialog {
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-         Disciplina p = this.camposParaObjeto();
+        Disciplina p = this.camposParaObjeto();
 
-        if(this.editando){
+        String nome = edtNome.getText();
+        String codigo = edtCod.getText();
+        int ch = Integer.parseInt(edtCh.getText());
+        String dpto = edtDpto.getText();
+
+        if (this.editando) {
             this.gerenciadorDisciplina.atualizarDisciplina(codAntigo, p);
-        }else{
+            this.servicoDadosDisciplina.atualizarDisciplina(codigo,nome,  ch, dpto);
+        } else {
             this.gerenciadorDisciplina.adicionarDisciplina(p);
+             
         }
 
         this.limparCampos();
         this.habilitarCampos(false);
         this.editando = false;
 
-        this.atualizarTabela(); 
-        this.gerenciadorDisciplina.salvarNoArquivo("ListagemDisciplinas.csv");
-        this.servicoDadosDisciplina.adicionarDisciplina(p);
-        
+        this.atualizarTabela();
+        //this.gerenciadorDisciplina.salvarNoArquivo("ListagemDisciplinas.csv");
+       this.servicoDadosDisciplina.adicionarDisciplina( codigo,nome,  ch, dpto);
+
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-         this.limparCampos();
+        this.limparCampos();
         this.habilitarCampos(false);
         this.editando = false;
     }//GEN-LAST:event_btnCancelarActionPerformed
@@ -354,11 +360,11 @@ public class DlgCadDisciplina extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Não existe este produto.");
         } else {
             this.gerenciadorDisciplina.removerDisciplina(codEscolhido);
-             this.servicoDadosDisciplina.excluirDisciplina(codEscolhido);
+            this.servicoDadosDisciplina.excluirDisciplina(codEscolhido);
             JOptionPane.showMessageDialog(this, "Exclusão feita com sucesso!");
         }
-        
-         this.atualizarTabela();
+
+        this.atualizarTabela();
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
@@ -376,12 +382,11 @@ public class DlgCadDisciplina extends javax.swing.JDialog {
             this.codAntigo = disciplinaEditando.getCod();
         }
     }//GEN-LAST:event_btnEditarActionPerformed
-          private void grdProfessorMouseClicked(java.awt.event.MouseEvent evt) {                                       
-       Disciplina d = this.getObjetoSelecionadoNaGrid();
-       this.objetoParaCampos(d);
+    private void grdProfessorMouseClicked(java.awt.event.MouseEvent evt) {
+        Disciplina d = this.getObjetoSelecionadoNaGrid();
+        this.objetoParaCampos(d);
     }
 
-    
     public Disciplina getObjetoSelecionadoNaGrid() {
         int linhaSelecionada = grdDisciplina.getSelectedRow();
 
@@ -391,14 +396,14 @@ public class DlgCadDisciplina extends javax.swing.JDialog {
             Disciplina d = tmCadDisciplina.getObjetoDisciplina(linhaSelecionada);
             return d;
         }
-        
+
         return null;
     }
-    
+
     public void atualizarTabela() {
-        TMCadDisciplina tmCadDisciplina = new TMCadDisciplina(this.gerenciadorDisciplina.getPessoas());
+        TMCadDisciplina tmCadDisciplina = new TMCadDisciplina(this.servicoDadosDisciplina.obterDisciplinas());
         grdDisciplina.setModel(tmCadDisciplina);
-    }                                     
+    }
 
 //    }    
 //    /**

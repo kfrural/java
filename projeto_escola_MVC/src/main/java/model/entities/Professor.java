@@ -19,9 +19,6 @@ public class Professor extends Pessoa {
         this.materia = materia;
     }
 
-    public Professor(String nome, String cpf, String materia, int idade) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 
     public void preencher() {
         Scanner ler = new Scanner(System.in);

@@ -11,6 +11,7 @@ import model.valid.ValidDisciplina;
  * @author kfrural
  */
 public class ServicoDadosDisciplina {
+
     private DisciplinaDAO repositorio;
 
     public ServicoDadosDisciplina(DisciplinaDAO repositorio) {
@@ -21,18 +22,16 @@ public class ServicoDadosDisciplina {
         this.repositorio = (DisciplinaDAO) repositorio;
     }
 
-    public void adicionarDisciplina(String cod, String nome, int ch,String  dpto) {  //Esse eh o bao
-         ValidDisciplina valid = new ValidDisciplina();
-         Disciplina d = valid.valid(cod, nome, ch, dpto);
-         this.repositorio.salvar(d);
+    public void adicionarDisciplina(String cod, String nome, int ch, String dpto) {  //Esse eh o bao
+        ValidDisciplina valid = new ValidDisciplina();
+        Disciplina d = valid.valid(cod, nome, ch, dpto);
+        this.repositorio.salvar(d);
         System.out.println("Disciplina adicionada com sucesso!");
     }
-    
-public void adicionarDisciplina(Disciplina d) {
-        repositorio.salvar(d);
-    }
-    public void excluirDisciplina(int idDisciplina) {
-        repositorio.excluir(idDisciplina);
+
+    public void atualizarDisciplina(String codAntigo, String nome, int ch, String dpto) { //esse eh o bao
+        excluirDisciplina(codAntigo);
+        adicionarDisciplina(codAntigo, nome, ch, dpto);
     }
 
     public List<Disciplina> obterDisciplinas() {

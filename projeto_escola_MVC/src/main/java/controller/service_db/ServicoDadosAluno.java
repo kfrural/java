@@ -11,22 +11,28 @@ import model.valid.ValidAluno;
  * @author kfrural
  */
 public class ServicoDadosAluno {
+
     private AlunoDAO repositorio;
 
     public ServicoDadosAluno(AlunoDAO repositorio) {
         this.repositorio = repositorio;
     }
-    
+
     public ServicoDadosAluno(IDAO repositorio) {
         this.repositorio = (AlunoDAO) repositorio;
     }
 
-    public void adicionarAluno(String cpf, String nome, int idade, String matricula, int anoIngresso) {
-    ValidAluno valid = new ValidAluno();
-    Aluno a = valid.valid(cpf, nome, idade, matricula, anoIngresso);
-    this.repositorio.salvar(a);
-    System.out.println("Aluno adicionado com sucesso!");
-}
+    public void adicionarAluno(String cpf, String nome, int idade, String curso) {
+        ValidAluno valid = new ValidAluno();
+        Aluno a = valid.valid(cpf, nome, idade, curso);
+        this.repositorio.salvar(a);
+        System.out.println("Aluno adicionado com sucesso!");
+    }
+
+    public void atualizarAluno(String cpf, String nome, int idade, String curso) { //esse eh o bao
+        excluirAluno(cpf);
+        adicionarAluno(cpf, nome, idade, curso);
+    }
 
     public void excluirAluno(int idAluno) {
         try {

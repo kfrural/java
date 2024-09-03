@@ -8,7 +8,7 @@ import model.exceptions.Exception;
  * @author kfrural
  */
 public class ValidAluno {
-    public Aluno valid(String cpf, String nome, int idade, String matricula, int anoIngresso) {
+    public Aluno valid(String cpf, String nome, int idade, String curso) {
         Aluno a = new Aluno();
 
         if (cpf == null || cpf.isEmpty()) {
@@ -26,15 +26,11 @@ public class ValidAluno {
         }
         a.setIdade(idade);
 
-        if (matricula == null || matricula.isEmpty()) {
-            throw new Exception("Error - Campo vazio: 'Matricula'.");
+        if (curso == null || curso.isEmpty()) {
+            throw new Exception("Error - Campo vazio: 'Curso'.");
         }
-        a.setMatricula(matricula);
+        a.setCurso(curso);
 
-        if (anoIngresso <= 0) {
-            throw new Exception("Error - Valor inválido no campo 'Ano de Ingresso'.");
-        }
-        a.setAnoIngresso(anoIngresso);
 
         return a;
     }

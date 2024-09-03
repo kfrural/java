@@ -19,42 +19,43 @@ public class SQLiteConnector {
         criarTabelaProfessor();
     }
 
-   public SQLiteConnector() throws SQLException {
-    this("default.db");
-}
-
     public Connection getConnection() {
         return connection;
     }
+    public SQLiteConnector() throws SQLException {
+    this("default.db");
+}
     
-    private void criarTabelaPessoa() {
-        String sql = "CREATE TABLE IF NOT EXISTS pessoa (" +
-                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                     "nome TEXT NOT NULL," +
-                     "cpf TEXT NOT NULL," +
-                     "idade INTEGER NOT NULL" +
-                     ");";
-        try (Statement stmt = connection.createStatement()) {
-            stmt.execute(sql);
-        } catch (SQLException e) {
-            System.out.println("Erro ao criar a tabela pessoa: " + e.getMessage());
-        }
-    }
+//    private void criarTabelaPessoa() {
+//        String sql = "CREATE TABLE IF NOT EXISTS pessoa (" +
+//                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+//                     "nome TEXT NOT NULL," +
+//                     "cpf TEXT NOT NULL," +
+//                     "idade INTEGER NOT NULL" +
+//                     ");";
+//        try (Statement stmt = connection.createStatement()) {
+//            stmt.execute(sql);
+//        } catch (SQLException e) {
+//            System.out.println("Erro ao criar a tabela pessoa: " + e.getMessage());
+//        }
+//    }
 
-    private void criarTabelaAluno() {
-        String sql = "CREATE TABLE IF NOT EXISTS aluno (" +
-                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                     "nome TEXT NOT NULL," +
-                     "cpf TEXT NOT NULL," +
-                     "curso TEXT NOT NULL," +
-                     "idade INTEGER NOT NULL" +
-                     ");";
-        try (Statement stmt = connection.createStatement()) {
-            stmt.execute(sql);
-        } catch (SQLException e) {
-            System.out.println("Erro ao criar a tabela aluno: " + e.getMessage());
-        }
+private void criarTabelaAluno() {
+    String sql = "CREATE TABLE IF NOT EXISTS aluno (" +
+                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                 "nome TEXT NOT NULL," +
+                 "cpf TEXT NOT NULL," +
+                 "curso TEXT NOT NULL," +
+                 "idade INTEGER NOT NULL," +
+                 "matricula INTEGER," +
+                 "anoIngresso INTEGER" +
+                 ");";
+    try (Statement stmt = connection.createStatement()) {
+        stmt.execute(sql);
+    } catch (SQLException e) {
+        System.out.println("Erro ao criar a tabela aluno: " + e.getMessage());
     }
+}
 
     private void criarTabelaDisciplina() {
         String sql = "CREATE TABLE IF NOT EXISTS disciplina (" +

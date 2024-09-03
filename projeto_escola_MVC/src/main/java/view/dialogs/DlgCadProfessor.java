@@ -340,9 +340,15 @@ public class DlgCadProfessor extends javax.swing.JDialog {
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         Professor novaProfessor = this.camposParaObjeto();
+        
+        String nome = edtNome.getText();
+        String cpf = edtCPF.getText();
+        int idade = Integer.parseInt(edtIdade.getText());
+        String materia = edtMateria.getText();
 
         if (this.editando) {
             this.gerenciadorProfessors.atualizarProfessor(cpfEscolhido, novaProfessor);
+            this.servicoDadosProf.atualizarProfessor(cpf, nome, idade, materia);
         } else {
             this.gerenciadorProfessors.adicionarProfessor(novaProfessor);
         }
@@ -353,7 +359,7 @@ public class DlgCadProfessor extends javax.swing.JDialog {
 
         this.atualizarTabela();
         gerenciadorProfessors.salvarNoArquivo("ListagemProfessores.csv");
-        this.servicoDadosProf.adicionarProfessor(novaProfessor);
+        this.servicoDadosProf.adicionarProfessor(cpf, nome, idade, materia);
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
@@ -398,7 +404,7 @@ public class DlgCadProfessor extends javax.swing.JDialog {
     }
 
     public void atualizarTabela() {
-        TMCadProfessor tmCadAluno = new TMCadProfessor(this.gerenciadorProfessors.getPessoas());
+        TMCadProfessor tmCadAluno = new TMCadProfessor(this.servicoDadosProf.obterProfessores());
         grdProfessor.setModel(tmCadAluno);
     }
 
